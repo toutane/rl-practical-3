@@ -49,11 +49,13 @@ class QLearningAgent:
         """
         value = 0.0
         # BEGIN SOLUTION
+        possible_q_values = [self.get_qvalue(state, action) for action in self.legal_actions]
+        value = max(possible_q_values)
         # END SOLUTION
         return value
 
     def update(
-        self, state: State, action: Action, reward: t.SupportsFloat, next_state: State
+            self, state: State, action: Action, reward: t.SupportsFloat, next_state: State
     ):
         """
         You should do your Q-Value update here:
@@ -64,17 +66,17 @@ class QLearningAgent:
         """
         q_value = 0.0
         # BEGIN SOLUTION
+        td_target = reward + self.gamma * self.get_value(next_state)
+        td_error = td_target - self.get_qvalue(state, action)
+        q_value = self.get_qvalue(state, action) + self.learning_rate * td_error
         # END SOLUTION
-
         self.set_qvalue(state, action, q_value)
 
     def get_best_action(self, state: State) -> Action:
         """
         Compute the best action to take in a state (using current q-values).
         """
-        possible_q_values = [
-            self.get_qvalue(state, action) for action in self.legal_actions
-        ]
+        possible_q_values = [self.get_qvalue(state, action) for action in self.legal_actions]
         index = np.argmax(possible_q_values)
         best_action = self.legal_actions[index]
         return best_action
@@ -88,8 +90,10 @@ class QLearningAgent:
               and compare it with your probability
         """
         action = self.legal_actions[0]
-
         # BEGIN SOLUTION
+        if (random.random() < self.epsilon):
+            action = random.choice(self.legal_actions)
+        else:
+            action = self.get_best_action(state)
         # END SOLUTION
-
         return action
