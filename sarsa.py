@@ -1,9 +1,9 @@
-from collections import defaultdict
 import random
 import typing as t
-import numpy as np
-import gymnasium as gym
+from collections import defaultdict
 
+import gymnasium as gym
+import numpy as np
 
 Action = int
 State = int
@@ -47,8 +47,10 @@ class SarsaAgent:
         """
         value = 0.0
         # BEGIN SOLUTION
-        possible_q_values = [self.get_qvalue(state, action) for action in self.legal_actions]
-        value =  max(possible_q_values)
+        possible_q_values = [
+            self.get_qvalue(state, action) for action in self.legal_actions
+        ]
+        value = max(possible_q_values)
         # END SOLUTION
         return value
 
@@ -63,7 +65,9 @@ class SarsaAgent:
         """
         q_value = 0.0
         # BEGIN SOLUTION
-        td_target = reward + self.gamma * self.get_qvalue(next_state, self.get_action(next_state))
+        td_target = reward + self.gamma * self.get_qvalue(
+            next_state, self.get_action(next_state)
+        )
         td_error = td_target - self.get_qvalue(state, action)
         q_value = self.get_qvalue(state, action) + self.learning_rate * td_error
         # END SOLUTION
